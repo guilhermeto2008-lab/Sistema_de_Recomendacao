@@ -2,7 +2,9 @@
 #include <string.h>
 #include <iostream>
 #include "dados.h"
+
 #include "ListaCompras.h"
+#include "Similaridade.h"
 
 void testeListaCompras(Dados *dados) {
     char codCliente[9];
@@ -62,6 +64,7 @@ int main(int argc, char *argv[]) {
 
                 // Teste Similaridade
                 case 2:
+                    construirMatrizSimilaridade(&dados);
                     break;
 
                 // Teste Recomendação
