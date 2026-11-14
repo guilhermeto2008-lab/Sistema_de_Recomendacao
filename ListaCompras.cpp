@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <iostream>
-#include "ListaCompras.h"
+#include "dados.h"
 using namespace std;
 
 void extrairDados(Dados *dados, char *nomeArquivo) {
@@ -9,7 +9,10 @@ void extrairDados(Dados *dados, char *nomeArquivo) {
     char codProduto[20];
     char nome[200];
 
-    int codProdutoInt;
+    const char *formato = " %8[^,],%19[^,],%19[^,],%199[^\r\n]";
+    
+    int indiceCliente;
+    int indiceProduto;
 
     FILE *arquivo = fopen(nomeArquivo, "r");
 
@@ -20,9 +23,7 @@ void extrairDados(Dados *dados, char *nomeArquivo) {
 
     fscanf(arquivo, "%*[^\n]");
 
-    while (fscanf(arquivo, " %8[^,],%19[^,],%d,%199[^\r\n]",
-                data, codCliente, codProdutoInt, nome) == 4) {
-
+    while (fscanf(arquivo, formato, data, codCliente, codProduto, nome) == 4) {
         if (dados->mapaClientes.find(codCliente) == dados->mapaClientes.end()) {
             dados->mapaClientes[codCliente] = dados->clientes.size();
             dados->clientes.push_back(codCliente);
@@ -30,15 +31,16 @@ void extrairDados(Dados *dados, char *nomeArquivo) {
 
         if (dados->mapaProdutos.find(codProduto) == dados->mapaProdutos.end()) {
             dados->mapaProdutos[codProduto] = dados->produtos.size();
-            dados->produtos.push_back(nome);
-        }   
+            dados->produtos.push_back(codProduto);
+        }
     }
+
+    dados->produtosComprados.resize(dados->clientes.size());
 
     rewind(arquivo);
     fscanf(arquivo, "%*[^\n]");
 
-    while (fscanf(arquivo, "%8[^,],%19[^,],%19[^,],%199[^\r\n]",
-                data, codCliente, codProduto, nome) == 4) {
+    while (fscanf(arquivo, formato, data, codCliente, codProduto, nome) == 4) {
         int ic = dados->mapaClientes[codCliente];
         int ip = dados->mapaProdutos[codProduto];
         dados->produtosComprados[ic].push_back(ip);
