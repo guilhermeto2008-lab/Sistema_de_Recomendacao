@@ -5,4 +5,6 @@
 
 void extrairDados(Dados *dados, char *nomeArquivo);
 
+void testeListaCompras(Dados *dados);
+
 #endif

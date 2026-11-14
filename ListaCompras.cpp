@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 #include <iostream>
 #include "dados.h"
 using namespace std;
@@ -47,4 +48,31 @@ void extrairDados(Dados *dados, char *nomeArquivo) {
     }
 
     fclose(arquivo);
+}
+
+void testeListaCompras(Dados *dados) {
+    char codCliente[9];
+    int indiceCliente;
+
+    while (1) {
+        cout << "Digite o código do cliente ou fim para sair: ";
+        fgets(codCliente, 9, stdin);
+        codCliente[strcspn(codCliente, "\n")] = '\0';
+
+        if (strcmp(codCliente, "fim") == 0) {
+            return;
+        }
+
+        else {
+            indiceCliente = dados->mapaClientes[codCliente];
+            cout << "Produtos comprados por " << codCliente << ": ";
+
+            for (int indiceProduto : dados->produtosComprados[indiceCliente]) {
+                    cout << dados->produtos[indiceProduto] << " ";
+            }
+            cout << endl;
+        }
+
+        getchar();
+    }
 }
