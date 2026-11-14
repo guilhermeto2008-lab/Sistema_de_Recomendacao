@@ -38,7 +38,6 @@ int main(int argc, char *argv[]) {
                 // Teste Similaridade
                 case 2:
                     construirMatrizSimilaridade(&dados);
-                    cout << "Processou os dados" << endl;
                     testeSimilaridade(&dados);
                     break;
 

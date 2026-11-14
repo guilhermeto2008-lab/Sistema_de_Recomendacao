@@ -69,7 +69,7 @@ void construirMatrizSimilaridade(Dados *dados) {
     // Preenche a matriz similaridade
     for (i = 0; i < qntClientes; ++i) {
         for (j = 0; j < qntClientes; ++j) {
-            dados->matrizSimilaridade[i][j] = 1 - (matrizIntersecao[i][j] / dados->produtosComprados[i].size());
+            dados->matrizSimilaridade[i][j] = 1 - ((float)matrizIntersecao[i][j] / dados->produtosComprados[i].size());
         }
     }
 }

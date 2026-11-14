@@ -17,7 +17,7 @@ struct Dados {
 
     vector<list<int>> produtosComprados;
 
-    vector<vector<int>> matrizSimilaridade;
+    vector<vector<float>> matrizSimilaridade;
 };
 
 #endif
