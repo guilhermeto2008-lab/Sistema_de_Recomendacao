@@ -1,14 +1,17 @@
 #include <stdio.h>
 #include <string.h>
 #include <iostream>
+#include <stdlib.h>
 #include "dados.h"
 
 #include "ListaCompras.h"
 #include "Similaridade.h"
+#include "recomendacao.h"
+
 
 int main(int argc, char *argv[]) {
-    if (argc == 1) {
-        printf("Uso: %s <dados_venda_cluster_0.csv>\n", argv[0]);
+    if (argc < 6) {
+        printf("Uso: %s <dados_venda_cluster_7.csv>\n", argv[0]);
         exit(EXIT_FAILURE);
     }
 
@@ -16,10 +19,19 @@ int main(int argc, char *argv[]) {
         Dados dados;
         int escolhaModulo = 0;
         int i;
+        int k = atoi(argv[1]);
 
-        for (i = 1; i < argc; i++) {
+        if (k <= 0){
+            printf("O k deve ser maior que zero.");
+            exit(EXIT_FAILURE);
+        }
+
+        for (i = 5; i < argc; i++) {
             extrairDados(&dados, argv[i]);
         }
+
+        printf("%d", k);
+        printf("%d", dados.clientes.size());
 
         printf("Escolha qual módulo deseja testar:\n");
         printf("1 para ListaCompras.\n2 para Similaridade.\n3 para Recomendação.\n\n");
@@ -43,6 +55,10 @@ int main(int argc, char *argv[]) {
 
                 // Teste Recomendação
                 case 3:
+                    if (dados.matrizSimilaridade.empty()) {
+                        construirMatrizSimilaridade(&dados);
+                    }
+                    testeRecomendacao(&dados);
                     break;
 
                 default:
