@@ -10,10 +10,9 @@ void extrairDados(Dados *dados, char *nomeArquivo) {
     char codProduto[20];
     char nome[200];
 
+    int jaComputou;
+
     const char *formato = " %8[^,],%19[^,],%19[^,],%199[^\r\n]";
-    
-    int indiceCliente;
-    int indiceProduto;
 
     FILE *arquivo = fopen(nomeArquivo, "r");
 
@@ -44,7 +43,18 @@ void extrairDados(Dados *dados, char *nomeArquivo) {
     while (fscanf(arquivo, formato, data, codCliente, codProduto, nome) == 4) {
         int ic = dados->mapaClientes[codCliente];
         int ip = dados->mapaProdutos[codProduto];
-        dados->produtosComprados[ic].push_back(ip);
+
+        jaComputou = 0;
+
+        for (int ipComprado : dados->produtosComprados[ic]) {
+            if (ip == ipComprado) {
+                jaComputou = 1;
+                break;
+            }
+        }
+
+        if (jaComputou == 0)
+            dados->produtosComprados[ic].push_back(ip);
     }
 
     fclose(arquivo);

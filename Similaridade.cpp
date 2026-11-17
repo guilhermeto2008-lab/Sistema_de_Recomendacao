@@ -15,9 +15,7 @@ void construirMatrizSimilaridade(Dados *dados) {
     // Preenche a matriz com 0 (não comprou o produto)
     matrizCompleta.resize(qntClientes);
     for (i = 0; i < qntClientes; ++i) {
-        for (j = 0; j < qntProdutos; ++j) {
-            matrizCompleta[i].push_back(0);
-        }
+        matrizCompleta[i].resize(qntProdutos);
     }
 
     // Preenche os produtos comprados com 1 (comprou o produto)
@@ -55,14 +53,14 @@ void construirMatrizSimilaridade(Dados *dados) {
         for (j = 0; j < qntClientes; ++j) {
             matrizIntersecao[i][j] = 0;
             for (k = 0; k < qntProdutos; ++k) {
-                matrizIntersecao[i][j] += matrizCompleta[i][k] * transpostaCompleta[k][j];
+                matrizIntersecao[i][j] = matrizIntersecao[i][j] + (matrizCompleta[i][k] * transpostaCompleta[k][j]);
             }
         }
     }
 
     // Redimensiona a matriz similaridade
     dados->matrizSimilaridade.resize(qntClientes);
-    for (i = 0; i < dados->matrizSimilaridade.size(); ++i) {
+    for (i = 0; i < qntClientes; ++i) {
         dados->matrizSimilaridade[i].resize(qntClientes);
     }
 
@@ -76,8 +74,9 @@ void construirMatrizSimilaridade(Dados *dados) {
 
 void testeSimilaridade(Dados *dados) {
     char codCliente[9];
-    int i, inicio;
-    int indiceCliente, maisSimilar, valorMaisSimilar;
+    int i;
+    int indiceCliente, maisSimilar;
+    float valorMaisSimilar;
 
     while (1) {
         cout << "Digite o código do cliente ou fim para sair: ";
@@ -93,22 +92,19 @@ void testeSimilaridade(Dados *dados) {
             if (indiceCliente != 0) {
                 maisSimilar = 0;
                 valorMaisSimilar = dados->matrizSimilaridade[indiceCliente][maisSimilar];
-                inicio = 1;
             }
             else {
                 maisSimilar = 1;
                 valorMaisSimilar = dados->matrizSimilaridade[indiceCliente][maisSimilar];
-                inicio = 2;
             }
 
-            for (i = inicio; i < dados->matrizSimilaridade.size(); ++i) {
-                if (i != indiceCliente && dados->matrizSimilaridade[indiceCliente][i] < valorMaisSimilar) {
-                    maisSimilar = i;
-                    valorMaisSimilar = dados->matrizSimilaridade[indiceCliente][i];
+            for (i = maisSimilar + 1; i < dados->matrizSimilaridade.size(); ++i) {
+                if (i != indiceCliente) {
+                    if (dados->matrizSimilaridade[indiceCliente][i] < valorMaisSimilar) {
+                        maisSimilar = i;
+                        valorMaisSimilar = dados->matrizSimilaridade[indiceCliente][i];
+                    }
                 }
-                // Cliente não se compara a ele mesmo
-                else
-                    continue;
             }
 
             cout << "O comprador mais similar a " << codCliente << " é " << dados->clientes[maisSimilar] << endl;
