@@ -7,6 +7,6 @@ using namespace std;
 
 void construirMatrizSimilaridade(Dados *dados);
 
-void testeSimilaridade(Dados *dados);
+void testeSimilaridade(Dados *dados, char *codCliente);
 
 #endif

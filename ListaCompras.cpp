@@ -1,18 +1,17 @@
 #include <stdio.h>
-#include <string.h>
 #include <iostream>
 #include "dados.h"
 using namespace std;
 
 void extrairDados(Dados *dados, char *nomeArquivo) {
     char data[9];
-    char codCliente[20];
-    char codProduto[20];
+    char codCliente[9];
+    char codProduto[6];
     char nome[200];
 
     int jaComputou;
 
-    const char *formato = " %8[^,],%19[^,],%19[^,],%199[^\r\n]";
+    const char *formato = " %8[^,],%8[^,],%5[^,],%199[^\r\n]";
 
     FILE *arquivo = fopen(nomeArquivo, "r");
 
@@ -53,36 +52,21 @@ void extrairDados(Dados *dados, char *nomeArquivo) {
             }
         }
 
-        if (jaComputou == 0)
+        if (!jaComputou)
             dados->produtosComprados[ic].push_back(ip);
     }
 
     fclose(arquivo);
 }
 
-void testeListaCompras(Dados *dados) {
-    char codCliente[9];
+void testeListaCompras(Dados *dados, char *codCliente) {
     int indiceCliente;
 
-    while (1) {
-        cout << "Digite o código do cliente ou fim para sair: ";
-        fgets(codCliente, 9, stdin);
-        codCliente[strcspn(codCliente, "\n")] = '\0';
+    indiceCliente = dados->mapaClientes[codCliente];
+    cout << "Produtos comprados por " << codCliente << ": ";
 
-        if (strcmp(codCliente, "fim") == 0) {
-            return;
-        }
-
-        else {
-            indiceCliente = dados->mapaClientes[codCliente];
-            cout << "Produtos comprados por " << codCliente << ": ";
-
-            for (int indiceProduto : dados->produtosComprados[indiceCliente]) {
-                    cout << dados->produtos[indiceProduto] << " ";
-            }
-            cout << endl;
-        }
-
-        getchar();
+    for (int indiceProduto : dados->produtosComprados[indiceCliente]) {
+        cout << dados->produtos[indiceProduto] << " ";
     }
+    cout << endl;
 }

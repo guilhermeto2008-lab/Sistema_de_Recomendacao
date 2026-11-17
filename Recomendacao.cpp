@@ -7,10 +7,10 @@ using namespace std;
 
 bool comparaProdutos(const ranking &a, const ranking &b){
     if (a.score != b.score) {
-        return a.score < b.score;   
+        return a.score < b.score;
     }
-    else{
-        return a.produto < b.produto;     
+    else {
+        return a.produto < b.produto;  
     }
 }
 
@@ -30,26 +30,17 @@ std::vector<int> recomendarProdutos(Dados *dados, int c, int k){
         comprou[p] = true;
     }
 
-    for (int v = 0; v == dados->clientes.size() - 1; v++) {
-       if (v == c){
-        continue;
-       }
-    
+    for (int v = 0; v < dados->clientes.size(); v++) {
         double s = dados->matrizSimilaridade[c][v];
-        if (s >= 1){ 
+        if (v == c || s == 1){
             continue;
         }
 
-        vector<bool> jaAplicou(qntProdutos, false); 
-
         for (int p : dados->produtosComprados[v]) {
-            if (!comprou[p] && !jaAplicou[p]) {
+            if (!comprou[p]) {
                 rankingProdutos[p].score *= s;
-                jaAplicou[p] = true;
             }
         }
-    
-    
     }
 
     vector <ranking> candidatos;
@@ -64,11 +55,11 @@ std::vector<int> recomendarProdutos(Dados *dados, int c, int k){
 
     vector<int> resultado;
 
-    for (int i = 0; i < k && i < (int) candidatos.size(); i++) {
+    for (int i = 0; i < k && i < candidatos.size(); i++) {
         resultado.push_back(candidatos[i].produto);
     }
 
-    return {};
+    return resultado;
 }
 
 void testeRecomendacao(Dados *dados, int k, char *codigos[], int qtd) {

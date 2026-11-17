@@ -1,6 +1,4 @@
-#include <stdio.h>
 #include <iostream>
-#include <string.h>
 #include "dados.h"
 
 using namespace std;
@@ -72,44 +70,29 @@ void construirMatrizSimilaridade(Dados *dados) {
     }
 }
 
-void testeSimilaridade(Dados *dados) {
-    char codCliente[9];
+void testeSimilaridade(Dados *dados, char* codCliente) {
     int i;
     int indiceCliente, maisSimilar;
     float valorMaisSimilar;
 
-    while (1) {
-        cout << "Digite o código do cliente ou fim para sair: ";
-        fgets(codCliente, 9, stdin);
-        codCliente[strcspn(codCliente, "\n")] = '\0';
-
-        if (strcmp(codCliente, "fim") == 0) {
-            return;
-        }
-
-        else {
-            indiceCliente = dados->mapaClientes[codCliente];
-            if (indiceCliente != 0) {
-                maisSimilar = 0;
-                valorMaisSimilar = dados->matrizSimilaridade[indiceCliente][maisSimilar];
-            }
-            else {
-                maisSimilar = 1;
-                valorMaisSimilar = dados->matrizSimilaridade[indiceCliente][maisSimilar];
-            }
-
-            for (i = maisSimilar + 1; i < dados->matrizSimilaridade.size(); ++i) {
-                if (i != indiceCliente) {
-                    if (dados->matrizSimilaridade[indiceCliente][i] < valorMaisSimilar) {
-                        maisSimilar = i;
-                        valorMaisSimilar = dados->matrizSimilaridade[indiceCliente][i];
-                    }
-                }
-            }
-
-            cout << "O comprador mais similar a " << codCliente << " é " << dados->clientes[maisSimilar] << endl;
-        }
-
-        getchar();
+    indiceCliente = dados->mapaClientes[codCliente];
+    if (indiceCliente != 0) {
+        maisSimilar = 0;
+        valorMaisSimilar = dados->matrizSimilaridade[indiceCliente][maisSimilar];
     }
+    else {
+        maisSimilar = 1;
+        valorMaisSimilar = dados->matrizSimilaridade[indiceCliente][maisSimilar];
+    }
+
+    for (i = maisSimilar + 1; i < dados->matrizSimilaridade.size(); ++i) {
+        if (i != indiceCliente) {
+            if (dados->matrizSimilaridade[indiceCliente][i] < valorMaisSimilar) {
+                maisSimilar = i;
+                valorMaisSimilar = dados->matrizSimilaridade[indiceCliente][i];
+            }
+        }
+    }
+
+        cout << "O comprador mais similar a " << codCliente << " é " << dados->clientes[maisSimilar] << endl;
 }

@@ -10,52 +10,58 @@
 
 
 int main(int argc, char *argv[]) {
-    if (argc < 2) {
-        printf("Uso: %s <dados_venda_cluster_7.csv>\n", argv[0]);
-        exit(EXIT_FAILURE);
-    }
+    Dados dados;
+    int escolhaModulo;
+    int i;
 
-    else {
-        Dados dados;
-        int escolhaModulo = 0;
-        int i;
+    if (strcmp(argv[1], "-l") == 0)
+        escolhaModulo = 1;
+    else if (strcmp(argv[1], "-s") == 0)
+        escolhaModulo = 2;
+    else if (strcmp(argv[1], "-r") == 0)
+        escolhaModulo = 3;
 
-        for (i = 1; i < argc; i++) {
-            extrairDados(&dados, argv[i]);
-        }
+    extrairDados(&dados, argv[2]);
 
-        printf("Escolha qual módulo deseja testar:\n");
-        printf("1 para ListaCompras.\n2 para Similaridade.\n3 para Recomendação.\n\n");
-
-        while (escolhaModulo != 1 && escolhaModulo != 2 && escolhaModulo != 3) {
-            scanf("%d", &escolhaModulo);
-            getchar();
-            cout << endl;
-
-            switch (escolhaModulo) {
-                // Teste ListaCompras
-                case 1:
-                    testeListaCompras(&dados);
-                    break;
-
-                // Teste Similaridade
-                case 2:
-                    construirMatrizSimilaridade(&dados);
-
-                    testeSimilaridade(&dados);
-                    break;
-
-                // Teste Recomendação
-                case 3:
-                    construirMatrizSimilaridade(&dados);
-
-                    testeRecomendacao(&dados);
-                    break;
-
-                default:
-                    printf("Alternativa inválida. Digite novamente: ");
+    switch (escolhaModulo) {
+        // Teste ListaCompras
+        case 1:
+            if (argc < 6) {
+                printf("Uso: %s -l <dados_venda_cluster_7.csv> cod1 cod2 ... codn\n", argv[0]);
+                exit(EXIT_FAILURE);
             }
-        }
+
+            for (i = 3; i < argc; ++i) {
+                testeListaCompras(&dados, argv[i]);
+            }
+            break;
+
+        // Teste Similaridade
+        case 2:
+            if (argc != 4) {
+                printf("Uso: %s -s <dados_venda_cluster_7.csv> codCliente\n", argv[0]);
+                exit(EXIT_FAILURE);
+            }
+            construirMatrizSimilaridade(&dados);
+
+            testeSimilaridade(&dados, argv[3]);
+            break;
+
+        // Teste Recomendação
+        case 3:
+            if (argc < 7) {
+                printf("Uso: %s -r <dados_venda_cluster_7.csv> k cod1 cod2 ... codn\n", argv[0]);
+                exit(EXIT_FAILURE);
+            }
+            construirMatrizSimilaridade(&dados);
+
+            char *clientes[3];
+            for (i = 0; i < 3; ++i) {
+                clientes[i] = argv[4 + i];
+            }
+
+            testeRecomendacao(&dados, atoi(argv[3]), clientes, 3);
+            break;
     }
 
     return 0;
