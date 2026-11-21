@@ -38,6 +38,7 @@ std::vector<int> recomendarProdutos(Dados *dados, int c, int k){
 
         for (int p : dados->produtosComprados[v]) {
             if (!comprou[p]) {
+                // Entender isso daqui
                 rankingProdutos[p].score *= s;
             }
         }
@@ -75,12 +76,14 @@ void testeRecomendacao(Dados *dados, int k, char *codigos[], int qtd) {
         int indice = it->second;
         vector<int> recomendados = recomendarProdutos(dados, indice, k);
 
+        // Printar com nome
+
         cout << "Recomendacoes para o cliente " << codigo << ":" << endl;
         if (recomendados.empty()) {
             cout << "  nenhuma recomendacao" << endl;
         } else {
             for (int ip : recomendados) {
-                cout << "  - " << dados->produtos[ip] << endl;
+                cout << "  - " << dados->nomesProdutos[ip] << endl;
             }
         }
         cout << endl;

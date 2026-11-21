@@ -5,7 +5,7 @@ using namespace std;
 
 #include "dados.h"
 
-void construirMatrizSimilaridade(Dados *dados);
+double construirMatrizSimilaridade(Dados *dados, int otimizado=1);
 
 void testeSimilaridade(Dados *dados, char *codCliente);
 

@@ -1,9 +1,13 @@
 #include <iostream>
+#include <ctime>
 #include "dados.h"
 
 using namespace std;
 
-void construirMatrizSimilaridade(Dados *dados) {
+// Retorna o tempo que levou para construir a matriz de similaridade
+double construirMatrizSimilaridade(Dados *dados, int otimizado=1) {
+    clock_t inicio = clock();
+
     int i, j, k;
 
     int qntClientes = dados->clientes.size(), qntProdutos = dados->produtos.size();
@@ -23,21 +27,6 @@ void construirMatrizSimilaridade(Dados *dados) {
         }
     }
 
-    vector<vector<int>> transpostaCompleta;
-
-    // Redimensiona a matriz transposta
-    transpostaCompleta.resize(qntProdutos);
-    for (i = 0; i < qntProdutos; ++i) {
-        transpostaCompleta[i].resize(qntClientes);
-    }
-
-    // Preenche a matriz transposta
-    for (i = 0; i < qntClientes; ++i) {
-        for (j = 0; j < qntProdutos; ++j) {
-            transpostaCompleta[j][i] = matrizCompleta[i][j];
-        }
-    }
-
     vector<vector<int>> matrizIntersecao;
 
     // Redimensiona a matriz interseção
@@ -46,12 +35,44 @@ void construirMatrizSimilaridade(Dados *dados) {
         matrizIntersecao[i].resize(qntClientes);
     }
 
-    // Multiplica a matriz Completa pela transposta para criar a interseção
-    for (i = 0; i < qntClientes; ++i) {
-        for (j = 0; j < qntClientes; ++j) {
-            matrizIntersecao[i][j] = 0;
-            for (k = 0; k < qntProdutos; ++k) {
-                matrizIntersecao[i][j] = matrizIntersecao[i][j] + (matrizCompleta[i][k] * transpostaCompleta[k][j]);
+    // Constrói a matriz interseção, de forma otimizada ou não.
+    if (otimizado) {
+        int soma;
+
+        // Constrói a matriz interseção de maneira otimizada
+        for (i = 0; i < qntClientes; ++i) {
+            for (j=0; j < qntClientes; ++j) {
+                soma = 0;
+                for (k = 0; k < qntProdutos; ++k) {
+                    soma += matrizCompleta[i][k] * matrizCompleta[j][k];
+                }
+            matrizIntersecao[i][j] = soma;
+            matrizIntersecao[j][i] = soma;
+            }
+        }
+    } else {
+        vector<vector<int>> transpostaCompleta;
+
+        // Redimensiona a matriz transposta
+        transpostaCompleta.resize(qntProdutos);
+        for (i = 0; i < qntProdutos; ++i) {
+            transpostaCompleta[i].resize(qntClientes);
+        }
+
+        // Preenche a matriz transposta
+        for (i = 0; i < qntClientes; ++i) {
+            for (j = 0; j < qntProdutos; ++j) {
+                transpostaCompleta[j][i] = matrizCompleta[i][j];
+            }
+        }
+
+        // Multiplica a matriz Completa pela transposta para criar a interseção
+        for (i = 0; i < qntClientes; ++i) {
+            for (j = 0; j < qntClientes; ++j) {
+                matrizIntersecao[i][j] = 0;
+                for (k = 0; k < qntProdutos; ++k) {
+                    matrizIntersecao[i][j] = matrizIntersecao[i][j] + (matrizCompleta[i][k] * transpostaCompleta[k][j]);
+                }
             }
         }
     }
@@ -68,6 +89,10 @@ void construirMatrizSimilaridade(Dados *dados) {
             dados->matrizSimilaridade[i][j] = 1 - ((float)matrizIntersecao[i][j] / dados->produtosComprados[i].size());
         }
     }
+
+    clock_t fim = clock();
+
+    return double(fim - inicio) / CLOCKS_PER_SEC;
 }
 
 void testeSimilaridade(Dados *dados, char* codCliente) {

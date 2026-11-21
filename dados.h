@@ -15,6 +15,8 @@ struct Dados {
     vector <string> produtos;
     map <string, int> mapaProdutos;
 
+    vector<string> nomesProdutos;
+
     vector<list<int>> produtosComprados;
 
     vector<vector<float>> matrizSimilaridade;

@@ -13,6 +13,7 @@ int main(int argc, char *argv[]) {
     Dados dados;
     int escolhaModulo;
     int i;
+    double tempoExecucao;
 
     if (strcmp(argv[1], "-l") == 0)
         escolhaModulo = 1;
@@ -38,13 +39,15 @@ int main(int argc, char *argv[]) {
 
         // Teste Similaridade
         case 2:
-            if (argc != 4) {
-                printf("Uso: %s -s <dados_venda_cluster_7.csv> codCliente\n", argv[0]);
+            if (argc != 5) {
+                printf("Uso: %s -s <dados_venda_cluster_7.csv> otimizado(0/1) codCliente\n", argv[0]);
                 exit(EXIT_FAILURE);
             }
-            construirMatrizSimilaridade(&dados);
 
-            testeSimilaridade(&dados, argv[3]);
+            tempoExecucao = construirMatrizSimilaridade(&dados, atoi(argv[3]));
+        cout << "Tempo construção da matriz similaridade de ordem " << dados.matrizSimilaridade.size() << ": " << tempoExecucao << " segundos." << endl;
+
+            testeSimilaridade(&dados, argv[4]);
             break;
 
         // Teste Recomendação

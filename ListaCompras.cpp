@@ -31,6 +31,7 @@ void extrairDados(Dados *dados, char *nomeArquivo) {
         if (dados->mapaProdutos.find(codProduto) == dados->mapaProdutos.end()) {
             dados->mapaProdutos[codProduto] = dados->produtos.size();
             dados->produtos.push_back(codProduto);
+            dados->nomesProdutos.push_back(nome);
         }
     }
 
